@@ -29,32 +29,32 @@ class InExprTest extends ReflectionTestCase
     public function dataProviderSuccess()
     {
         return [
-            ['field', 'value',              'value'],
-            ['field', 'value with space',   'value with space'],
-            ['field', 'áéíóúãõ',            'áéíóúãõ'],
-            ['field', '123',                '123'],
-            ['field', 'null',               'null'],
-            ['field', '[]',                 '[]'],
-            ['field', 'value+',             'value+'],
-            ['field', 'value1+value2',      'value1+value2'],
-            ['field', 1,                    1],
-            ['field', 1.5,                  1.5],
-            ['field', 0,                    0],
-            ['field', -1,                   -1],
-            ['field', -1.5,                 -1.5],
-            ['field', ['value'],            'value'],
-            ['field', ['value with space'], 'value with space'],
-            ['field', ['áéíóúãõ'],          'áéíóúãõ'],
-            ['field', ['123'],              '123'],
-            ['field', ['null'],             'null'],
-            ['field', ['[]'],               '[]'],
-            ['field', ['value'],            'value'],
-            ['field', ['value1', 'value2'], 'value1+value2'],
-            ['field', [1],                  1],
-            ['field', [1.5],                1.5],
-            ['field', [0],                  0],
-            ['field', [-1],                 -1],
-            ['field', [-1.5],               -1.5],
+            ['field', 'value',              ['value']],
+            ['field', 'value with space',   ['value with space']],
+            ['field', 'áéíóúãõ',            ['áéíóúãõ']],
+            ['field', '123',                ['123']],
+            ['field', 'null',               ['null']],
+            ['field', '[]',                 ['[]']],
+            ['field', 'value+',             ['value']],
+            ['field', 'value1+value2',      ['value1', 'value2']],
+            ['field', 1,                    [1]],
+            ['field', 1.5,                  [1.5]],
+            ['field', 0,                    [0]],
+            ['field', -1,                   [-1]],
+            ['field', -1.5,                 [-1.5]],
+            ['field', ['value'],            ['value']],
+            ['field', ['value with space'], ['value with space']],
+            ['field', ['áéíóúãõ'],          ['áéíóúãõ']],
+            ['field', ['123'],              ['123']],
+            ['field', ['null'],             ['null']],
+            ['field', ['[]'],               ['[]']],
+            ['field', ['value'],            ['value']],
+            ['field', ['value1', 'value2'], ['value1', 'value2']],
+            ['field', [1],                  [1]],
+            ['field', [1.5],                [1.5]],
+            ['field', [0],                  [0]],
+            ['field', [-1],                 [-1]],
+            ['field', [-1.5],               [-1.5]],
         ];
     }
 
@@ -105,6 +105,8 @@ class InExprTest extends ReflectionTestCase
         $this->assertEquals($field, $expr->getField());
 
         $this->assertEquals($rawValue, $expr->getRawValue());
+
+        $this->assertTrue(is_array($expr->getValue()));
 
         $this->assertEquals($expectedValue, $expr->getValue());
     }
