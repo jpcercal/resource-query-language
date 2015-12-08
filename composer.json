@@ -1,0 +1,55 @@
+{
+    "name": "cekurte/rql",
+    "description": "A Resource Query Language to PHP",
+    "keywords": [
+        "rql",
+        "resource",
+        "query",
+        "language",
+        "parser",
+        "doctrine",
+        "builder",
+        "query string",
+        "query builder",
+        "filter",
+        "sort"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.5",
+        "doctrine/orm": "^2.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8",
+        "cekurte/tdd": "^1.0.1",
+        "sjparkinson/static-review": "^5.1",
+        "sensiolabs/security-checker": "^3.0",
+        "squizlabs/php_codesniffer": "^2.3"
+    },
+    "authors": [
+        {
+            "name": "João Paulo Cercal",
+            "email": "jpcercal@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Cekurte\\Resource\\Query\\Language\\": "src/"
+        },
+        "files": [
+            "src/env.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cekurte\\Resource\\Query\\Language\\Test\\": "test/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "vendor/bin/static-review.php hook:install --force bin/git/hooks/pre-commit.php .git/hooks/pre-commit"
+        ]
+    }
+}
