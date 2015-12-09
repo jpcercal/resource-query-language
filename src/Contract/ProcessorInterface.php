@@ -11,6 +11,7 @@
 
 namespace Cekurte\Resource\Query\Language\Contract;
 
+use Cekurte\Resource\Query\Language\Contract\QueryLanguageInterface;
 use Cekurte\Resource\Query\Language\ExprQueue;
 
 /**
@@ -18,7 +19,7 @@ use Cekurte\Resource\Query\Language\ExprQueue;
  *
  * @author João Paulo Cercal <jpcercal@gmail.com>
  */
-interface ProcessorInterface
+interface ProcessorInterface extends QueryLanguageInterface
 {
     /**
      * Process a ExprQueue to a specific target.

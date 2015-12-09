@@ -11,6 +11,7 @@
 
 namespace Cekurte\Resource\Query\Language\Contract;
 
+use Cekurte\Resource\Query\Language\Contract\QueryLanguageInterface;
 use Cekurte\Resource\Query\Language\Exception\ParserException;
 use Cekurte\Resource\Query\Language\ExprQueue;
 
@@ -19,7 +20,7 @@ use Cekurte\Resource\Query\Language\ExprQueue;
  *
  * @author João Paulo Cercal <jpcercal@gmail.com>
  */
-interface ParserInterface
+interface ParserInterface extends QueryLanguageInterface
 {
     /**
      * Parse a data source to ExprQueue instance.

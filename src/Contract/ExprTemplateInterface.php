@@ -11,13 +11,15 @@
 
 namespace Cekurte\Resource\Query\Language\Contract;
 
+use Cekurte\Resource\Query\Language\Contract\QueryLanguageInterface;
+
 /**
  * ExprTemplateInterface
  *
  *
  * @author João Paulo Cercal <jpcercal@gmail.com>
  */
-interface ExprTemplateInterface
+interface ExprTemplateInterface extends QueryLanguageInterface
 {
     /**
      * Get the field that will be filtered.

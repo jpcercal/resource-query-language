@@ -11,12 +11,14 @@
 
 namespace Cekurte\Resource\Query\Language\Contract;
 
+use Cekurte\Resource\Query\Language\Contract\QueryLanguageInterface;
+
 /**
  * ExprInterface
  *
  * @author João Paulo Cercal <jpcercal@gmail.com>
  */
-interface ExprInterface
+interface ExprInterface extends QueryLanguageInterface
 {
     /**
      * Get the operator.

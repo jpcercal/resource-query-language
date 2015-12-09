@@ -12,6 +12,7 @@
 namespace Cekurte\Resource\Query\Language;
 
 use Cekurte\Resource\Query\Language\Contract\ExprInterface;
+use Cekurte\Resource\Query\Language\Contract\QueryLanguageInterface;
 use Cekurte\Resource\Query\Language\Exception\ExprException;
 
 /**
@@ -19,7 +20,7 @@ use Cekurte\Resource\Query\Language\Exception\ExprException;
  *
  * @author João Paulo Cercal <jpcercal@gmail.com>
  */
-class ExprQueue extends \SplQueue
+class ExprQueue extends \SplQueue implements QueryLanguageInterface
 {
     /**
      * @return ExprQueue
