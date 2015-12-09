@@ -19,6 +19,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.5",
+        "psr/http-message": "^1.0",
         "doctrine/orm": "^2.5"
     },
     "require-dev": {
@@ -37,10 +38,7 @@
     "autoload": {
         "psr-4": {
             "Cekurte\\Resource\\Query\\Language\\": "src/"
-        },
-        "files": [
-            "src/env.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
