@@ -12,25 +12,23 @@
 namespace Cekurte\Resource\Query\Language;
 
 use Cekurte\Resource\Query\Language\Contract\ExprInterface;
-use Cekurte\Resource\Query\Language\Contract\QueryLanguageInterface;
-use Cekurte\Resource\Query\Language\Exception\ExprException;
+use Cekurte\Resource\Query\Language\Contract\QueueInterface;
+use Cekurte\Resource\Query\Language\Exception\QueueException;
 
 /**
  * ExprQueue
  *
  * @author João Paulo Cercal <jpcercal@gmail.com>
  */
-class ExprQueue extends \SplQueue implements QueryLanguageInterface
+class ExprQueue extends \SplQueue implements QueueInterface
 {
     /**
-     * @return ExprQueue
-     *
-     * @throws ExprException
+     * @inheritdoc
      */
     public function enqueue($expr)
     {
         if (!$expr instanceof ExprInterface) {
-            throw new ExprException(sprintf(
+            throw new QueueException(sprintf(
                 'The $expr variable is not a instance of %s.',
                 'Cekurte\Resource\Query\Language\Contract\ExprInterface'
             ));
