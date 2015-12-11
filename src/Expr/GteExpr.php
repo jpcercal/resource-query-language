@@ -30,6 +30,18 @@ class GteExpr extends AbstractExpr implements ExprInterface
      */
     public function __construct($field, $value)
     {
+        if (!is_string($field)) {
+            throw new InvalidExprException('The value of "field" must be a string data type.');
+        }
+
+        if (empty($field)) {
+            throw new InvalidExprException('The value of "field" can not be empty.');
+        }
+
+        if (is_string($value)) {
+            $value = trim($value);
+        }
+
         if (!is_numeric($value)) {
             throw new InvalidExprException('The value must be a numeric data type.');
         }
@@ -38,7 +50,7 @@ class GteExpr extends AbstractExpr implements ExprInterface
         $this->operator   = '>=';
 
         $this->field = $field;
-        $this->value = abs($value);
+        $this->value = $value + 0;
     }
 
     /**
