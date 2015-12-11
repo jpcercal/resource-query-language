@@ -80,6 +80,8 @@ abstract class AbstractParser implements ParserInterface
                     restore_error_handler();
 
                     return $builder->paginate($currentPageNumber, $maxResultsPerPage);
+                case 'or':
+                    return $builder->orx($value);
                 default:
                     return $builder->{$expression}($field, $value);
             }

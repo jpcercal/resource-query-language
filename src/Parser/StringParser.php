@@ -69,7 +69,11 @@ class StringParser extends AbstractParser implements ParserInterface
         $items = explode($this->getSeparator(), $this->getData());
 
         foreach ($items as $item) {
-            if (substr_count($item = trim($item), ':') !== 2) {
+            if (empty($item)) {
+                continue;
+            }
+
+            if (substr_count($item = trim($item), ':') < 2) {
                 throw new ParserException(sprintf(
                     'The template of the current item "%s" is invalid.',
                     $item
@@ -77,6 +81,10 @@ class StringParser extends AbstractParser implements ParserInterface
             }
 
             list($field, $expression, $value) = explode(':', $item);
+
+            if ($expression === 'or') {
+                $value = substr($item, strpos(sprintf(':%s:', $expression), $item) + 4);
+            }
 
             $this->process($builder, $field, $expression, $value);
         }
