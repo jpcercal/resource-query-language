@@ -23,6 +23,7 @@
         "doctrine/orm": "^2.5"
     },
     "require-dev": {
+        "zendframework/zend-diactoros": "^1.3",
         "phpunit/phpunit": "^4.8",
         "cekurte/tdd": "^1.0.1",
         "sjparkinson/static-review": "^5.1",
