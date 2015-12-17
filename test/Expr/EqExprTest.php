@@ -1,6 +1,6 @@
 <?php
 
-namespace Cekurte\Resource\Query\Language\Test;
+namespace Cekurte\Resource\Query\Language\Test\Expr;
 
 use Cekurte\Resource\Query\Language\Expr\EqExpr;
 use Cekurte\Tdd\ReflectionTestCase;
