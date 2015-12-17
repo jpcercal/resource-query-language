@@ -100,7 +100,7 @@ class RequestParser extends AbstractParser implements ParserInterface
             list($field, $expression, $value) = explode(':', $item);
 
             if ($expression === 'or') {
-                $value = substr($item, strpos(sprintf(':%s:', $expression), $item) + 4);
+                $value = $this->getValueToOrExpression($item);
             }
 
             $this->process($builder, $field, $expression, $value);
