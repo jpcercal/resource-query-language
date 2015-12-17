@@ -12,6 +12,7 @@
 namespace Cekurte\Resource\Query\Language\Expr;
 
 use Cekurte\Resource\Query\Language\Contract\ExprInterface;
+use Cekurte\Resource\Query\Language\Exception\InvalidExprException;
 use Cekurte\Resource\Query\Language\Expr\AbstractExpr;
 
 /**
@@ -27,6 +28,18 @@ class LikeExpr extends AbstractExpr implements ExprInterface
      */
     public function __construct($field, $value)
     {
+        if (!is_string($field)) {
+            throw new InvalidExprException('The value of "field" must be a string data type.');
+        }
+
+        if (empty($field)) {
+            throw new InvalidExprException('The value of "field" can not be empty.');
+        }
+
+        if (!is_string($value)) {
+            throw new InvalidExprException('The value of "value" must be a string data type.');
+        }
+
         $this->expression = 'like';
         $this->operator   = 'like';
 

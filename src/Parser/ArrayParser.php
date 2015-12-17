@@ -41,6 +41,10 @@ class ArrayParser extends AbstractParser implements ParserInterface
         $items = $this->getData();
 
         foreach ($items as $item) {
+            if (empty($item)) {
+                continue;
+            }
+
             if (!isset($item['field'])) {
                 throw new ParserException('The key "field" is not set.');
             }
@@ -58,6 +62,13 @@ class ArrayParser extends AbstractParser implements ParserInterface
                 $item['expression'],
                 $item['value'],
             ];
+
+            if ($expression === 'or') {
+                $value = is_array($value)
+                    ? implode('|', $value)
+                    : $this->getValueToOrExpression(sprintf(':or:%s', $value));
+                ;
+            }
 
             $this->process($builder, $field, $expression, $value);
         }

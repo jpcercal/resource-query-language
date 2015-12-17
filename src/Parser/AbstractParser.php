@@ -52,42 +52,49 @@ abstract class AbstractParser implements ParserInterface
      */
     public function process(ExprBuilder $builder, $field, $expression, $value)
     {
-        if (Expr::isValidExpression($expression)) {
-            switch ($expression = strtolower($expression)) {
-                case 'between':
-                    set_error_handler(function () use ($value) {
-                        throw new ParserException(sprintf(
-                            'The value of "between" expression "%s" is not valid.',
-                            $value
-                        ));
-                    });
-
-                    list($from, $to) = explode('-', $value);
-
-                    restore_error_handler();
-
-                    return $builder->between($field, $from, $to);
-                case 'paginate':
-                    set_error_handler(function () use ($value) {
-                        throw new ParserException(sprintf(
-                            'The value of "paginate" expression "%s" is not valid.',
-                            $value
-                        ));
-                    });
-
-                    list($currentPageNumber, $maxResultsPerPage) = explode('-', $value);
-
-                    restore_error_handler();
-
-                    return $builder->paginate($currentPageNumber, $maxResultsPerPage);
-                default:
-                    return $builder->{$expression}($field, $value);
-            }
+        if (!Expr::isValidExpression($expression)) {
+            throw new ParserException(sprintf(
+                'The expression "%s" is not allowed or not exists.',
+                $expression
+            ));
         }
 
-        throw new ParserException(sprintf(
-            'The expression "%s" is not allowed or not exists.',
-            $expression
-        ));
+        switch ($expression) {
+            case 'between':
+                set_error_handler(function () use ($value) {
+                    throw new ParserException(sprintf(
+                        'The value of "between" expression "%s" is not valid.',
+                        $value
+                    ));
+                });
+
+                list($from, $to) = explode('-', $value);
+
+                restore_error_handler();
+
+                return $builder->between($field, $from, $to);
+            case 'paginate':
+                set_error_handler(function () use ($value) {
+                    throw new ParserException(sprintf(
+                        'The value of "paginate" expression "%s" is not valid.',
+                        $value
+                    ));
+                });
+
+                list($currentPageNumber, $maxResultsPerPage) = explode('-', $value);
+
+                restore_error_handler();
+
+                return $builder->paginate($currentPageNumber, $maxResultsPerPage);
+            case 'or':
+                return $builder->orx($value);
+            default:
+                return $builder->{$expression}($field, $value);
+        }
+    }
+
+    protected function getValueToOrExpression($item)
+    {
+        return substr($item, strpos(sprintf(':%s:', 'or'), $item) + 4);
     }
 }
