@@ -64,9 +64,9 @@ class ArrayParser extends AbstractParser implements ParserInterface
             ];
 
             if ($expression === 'or') {
-                $value = is_array($item['value'])
-                    ? $item['value']
-                    : substr($item, strpos(sprintf(':%s:', $expression), $item) + 4)
+                $value = is_array($value)
+                    ? implode('|', $value)
+                    : $this->getValueToOrExpression(sprintf(':or:%s', $value));
                 ;
             }
 
