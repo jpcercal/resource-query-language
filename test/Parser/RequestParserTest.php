@@ -2,6 +2,7 @@
 
 namespace Cekurte\Resource\Query\Language\Test\Parser;
 
+use Cekurte\Resource\Query\Language\Exception\ParserException;
 use Cekurte\Resource\Query\Language\ExprBuilder;
 use Cekurte\Resource\Query\Language\Parser\RequestParser;
 use Cekurte\Tdd\ReflectionTestCase;
@@ -181,7 +182,11 @@ class RequestParserTest extends ReflectionTestCase
      */
     public function testError($data)
     {
-        new RequestParser($data);
+        try {
+            new RequestParser($data);
+        } catch (\TypeError $error) {
+            throw new ParserException($error->getMessage());
+        }
     }
 
     /**
