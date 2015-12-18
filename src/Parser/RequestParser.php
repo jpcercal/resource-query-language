@@ -86,7 +86,11 @@ class RequestParser extends AbstractParser implements ParserInterface
         $items = $queryParams[$queryStringParameter];
 
         foreach ($items as $item) {
-            if (substr_count($item = trim($item), ':') !== 2) {
+            if (empty($item)) {
+                continue;
+            }
+
+            if (substr_count($item = trim($item), ':') < 2) {
                 throw new ParserException(sprintf(
                     'The template of the current item "%s" is invalid.',
                     $item
@@ -94,6 +98,10 @@ class RequestParser extends AbstractParser implements ParserInterface
             }
 
             list($field, $expression, $value) = explode(':', $item);
+
+            if ($expression === 'or') {
+                $value = $this->getValueToOrExpression($item);
+            }
 
             $this->process($builder, $field, $expression, $value);
         }

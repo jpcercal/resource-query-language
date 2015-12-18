@@ -23,6 +23,7 @@ use Cekurte\Resource\Query\Language\Expr\LteExpr;
 use Cekurte\Resource\Query\Language\Expr\NeqExpr;
 use Cekurte\Resource\Query\Language\Expr\NotInExpr;
 use Cekurte\Resource\Query\Language\Expr\NotLikeExpr;
+use Cekurte\Resource\Query\Language\Expr\OrExpr;
 use Cekurte\Resource\Query\Language\Expr\PaginateExpr;
 use Cekurte\Resource\Query\Language\Expr\SortExpr;
 
@@ -88,13 +89,13 @@ class ExprBuilder extends ExprQueue
 
     /**
      * @param  string       $field
-     * @param  string|array $values
+     * @param  string|array $rawValue
      *
      * @return ExprBuilder
      */
-    public function in($field, $values)
+    public function in($field, $rawValue)
     {
-        $this->enqueue(new InExpr($field, $values));
+        $this->enqueue(new InExpr($field, $rawValue));
 
         return $this;
     }
@@ -153,13 +154,13 @@ class ExprBuilder extends ExprQueue
 
     /**
      * @param  string       $field
-     * @param  string|array $values
+     * @param  string|array $rawValue
      *
      * @return ExprBuilder
      */
-    public function notIn($field, $values)
+    public function notIn($field, $rawValue)
     {
-        $this->enqueue(new NotInExpr($field, $values));
+        $this->enqueue(new NotInExpr($field, $rawValue));
 
         return $this;
     }
@@ -173,6 +174,18 @@ class ExprBuilder extends ExprQueue
     public function notLike($field, $value)
     {
         $this->enqueue(new NotLikeExpr($field, $value));
+
+        return $this;
+    }
+
+    /**
+     * @param  string|array $expressions
+     *
+     * @return ExprBuilder
+     */
+    public function orx($expressions)
+    {
+        $this->enqueue(new OrExpr($expressions));
 
         return $this;
     }

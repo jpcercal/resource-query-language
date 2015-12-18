@@ -90,7 +90,11 @@ abstract class AbstractExpr implements ExprInterface, ExprTemplateInterface
      */
     public function getOutputExpression()
     {
-        return trim($this->getField() . $this->getOperator() . $this->getValue());
+        $operator = $this->getOperator();
+
+        $formattedOperator = empty($operator) ? ' ' : sprintf(' %s ', $operator);
+
+        return trim($this->getField() . $formattedOperator . $this->getValue());
     }
 
     /**
@@ -106,7 +110,7 @@ abstract class AbstractExpr implements ExprInterface, ExprTemplateInterface
      */
     public function getOperator()
     {
-        return sprintf(' %s ', $this->operator);
+        return empty($this->operator) ? '' : $this->operator;
     }
 
     /**

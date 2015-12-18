@@ -41,6 +41,7 @@ final class Expr
             'neq'      => '\Cekurte\Resource\Query\Language\Expr\NeqExpr',
             'notin'    => '\Cekurte\Resource\Query\Language\Expr\NotInExpr',
             'notlike'  => '\Cekurte\Resource\Query\Language\Expr\NotLikeExpr',
+            'or'       => '\Cekurte\Resource\Query\Language\Expr\OrExpr',
             'paginate' => '\Cekurte\Resource\Query\Language\Expr\PaginateExpr',
             'sort'     => '\Cekurte\Resource\Query\Language\Expr\SortExpr',
         ];

@@ -40,12 +40,35 @@ class PaginateExpr extends AbstractExpr implements ExprInterface
      */
     public function __construct($currentPageNumber, $maxResultsPerPage)
     {
-        if (!is_numeric($currentPageNumber)) {
-            throw new InvalidExprException('The currentPageNumber must be a numeric data type.');
+        if (!is_int($currentPageNumber) && !is_numeric($currentPageNumber)) {
+            throw new InvalidExprException('The value of "currentPageNumber" must be an int data type.');
         }
 
-        if (!is_numeric($maxResultsPerPage)) {
-            throw new InvalidExprException('The maxResultsPerPage must be a numeric data type.');
+        if (!is_int($maxResultsPerPage) && !is_numeric($maxResultsPerPage)) {
+            throw new InvalidExprException('The value of "maxResultsPerPage" must be an int data type.');
+        }
+
+        $currentPageNumber = $currentPageNumber + 0;
+        $maxResultsPerPage = $maxResultsPerPage + 0;
+
+        if (is_float($currentPageNumber)) {
+            throw new InvalidExprException('The value of "currentPageNumber" must be an int data type.');
+        }
+
+        if (is_float($maxResultsPerPage)) {
+            throw new InvalidExprException('The value of "maxResultsPerPage" must be an int data type.');
+        }
+
+        if ($currentPageNumber < 1) {
+            throw new InvalidExprException('The value of "currentPageNumber" can not be less than one.');
+        }
+
+        if ($maxResultsPerPage < 1) {
+            throw new InvalidExprException('The value of "maxResultsPerPage" can not be less than one.');
+        }
+
+        if ($maxResultsPerPage > 100) {
+            throw new InvalidExprException('The value of "maxResultsPerPage" can not be greater than one hundred.');
         }
 
         $this->expression = 'paginate';
@@ -54,8 +77,8 @@ class PaginateExpr extends AbstractExpr implements ExprInterface
         $this->field = null;
         $this->value = $currentPageNumber . '-' . $maxResultsPerPage;
 
-        $this->currentPageNumber = intval($currentPageNumber);
-        $this->maxResultsPerPage = intval($maxResultsPerPage);
+        $this->currentPageNumber = $currentPageNumber;
+        $this->maxResultsPerPage = $maxResultsPerPage;
     }
 
     /**
