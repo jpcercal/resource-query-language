@@ -12,6 +12,7 @@
 namespace Cekurte\Resource\Query\Language;
 
 use Cekurte\Resource\Query\Language\ExprQueue;
+use Cekurte\Resource\Query\Language\Expr\AndExpr;
 use Cekurte\Resource\Query\Language\Expr\BetweenExpr;
 use Cekurte\Resource\Query\Language\Expr\EqExpr;
 use Cekurte\Resource\Query\Language\Expr\GtExpr;
@@ -34,6 +35,18 @@ use Cekurte\Resource\Query\Language\Expr\SortExpr;
  */
 class ExprBuilder extends ExprQueue
 {
+    /**
+     * @param  string|array $expressions
+     *
+     * @return ExprBuilder
+     */
+    public function andx($expressions)
+    {
+        $this->enqueue(new AndExpr($expressions));
+
+        return $this;
+    }
+
     /**
      * @param  string $field
      * @param  string $from
