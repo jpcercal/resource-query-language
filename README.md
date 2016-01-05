@@ -85,6 +85,7 @@ Note that the [ExprBuilder](https://github.com/cekurte/resource-query-language/b
 
 Currently are available the following expressions:
 
+- [AndExpr](#andexpr)
 - [BetweenExpr](#betweenexpr)
 - [EqExpr](#eqexpr)
 - [GteExpr](#gteexpr)
@@ -101,6 +102,26 @@ Currently are available the following expressions:
 - [SortExpr](#sortexpr)
 
 Above was listed the available query expressions, next you can see the use of expressions using the [ExprBuilder](https://github.com/cekurte/resource-query-language/blob/master/src/ExprBuilder.php) and the [ExprQueue](https://github.com/cekurte/resource-query-language/blob/master/src/ExprQueue.php).
+
+#### AndExpr
+
+The [AndExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/AndExpr.php) can be used to query a value joining the above comparison expressions to perform the query. In the following example all fields that are filled with the value one and two will be returned.
+
+```php
+<?php
+
+use Cekurte\Resource\Query\Language\ExprBuilder;
+use Cekurte\Resource\Query\Language\ExprQueue;
+use Cekurte\Resource\Query\Language\Expr\AndExpr;
+
+// Using the ExprBuilder
+$expr = new ExprBuilder();
+$expr->andx(['field:eq:1', 'field:eq:2']);
+
+// OR using the ExprQueue...
+$expr = new ExprQueue();
+$expr->enqueue(new AndExpr(['field:eq:1', 'field:eq:2']));
+```
 
 #### BetweenExpr
 
