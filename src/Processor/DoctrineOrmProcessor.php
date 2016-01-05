@@ -15,6 +15,7 @@ use Cekurte\Resource\Query\Language\Contract\ExprInterface;
 use Cekurte\Resource\Query\Language\Contract\ProcessorInterface;
 use Cekurte\Resource\Query\Language\Exception\ProcessorException;
 use Cekurte\Resource\Query\Language\ExprQueue;
+use Cekurte\Resource\Query\Language\Expr\AndExpr;
 use Cekurte\Resource\Query\Language\Expr\BetweenExpr;
 use Cekurte\Resource\Query\Language\Expr\OrExpr;
 use Cekurte\Resource\Query\Language\Expr\PaginateExpr;
@@ -28,10 +29,6 @@ use Doctrine\ORM\QueryBuilder;
  */
 class DoctrineOrmProcessor implements ProcessorInterface
 {
-    const WHERE_OPERATION_MODE_AND = 'andWhere';
-
-    const WHERE_OPERATION_MODE_OR  = 'orWhere';
-
     /**
      * @var QueryBuilder
      */
@@ -40,7 +37,7 @@ class DoctrineOrmProcessor implements ProcessorInterface
     /**
      * @var string
      */
-    protected $whereOperationMode;
+    protected $processingExprAndExprOr;
 
     /**
      * @param QueryBuilder $queryBuilder
@@ -49,36 +46,15 @@ class DoctrineOrmProcessor implements ProcessorInterface
     {
         $this->queryBuilder = $queryBuilder;
 
-        $this->setWhereOperationMode(self::WHERE_OPERATION_MODE_AND);
+        $this->processingExprAndExprOr = false;
     }
 
     /**
-     * @param  string $whereOperationMode
-     *
-     * @return DoctrineOrmProcessor
-     *
-     * @throws ProcessorException
+     * @return bool
      */
-    protected function setWhereOperationMode($whereOperationMode)
+    protected function isProcessingExprAndExprOr()
     {
-        if (!in_array($whereOperationMode, [self::WHERE_OPERATION_MODE_AND, self::WHERE_OPERATION_MODE_OR])) {
-            throw new ProcessorException(sprintf(
-                'The where operation mode "%s" is not allowed or not exists.',
-                $whereOperationMode
-            ));
-        }
-
-        $this->whereOperationMode = $whereOperationMode;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWhereOperationMode()
-    {
-        return $this->whereOperationMode;
+        return $this->processingExprAndExprOr;
     }
 
     /**
@@ -87,7 +63,9 @@ class DoctrineOrmProcessor implements ProcessorInterface
     public function process(ExprQueue $queue)
     {
         foreach ($queue as $expr) {
-            if ($expr instanceof BetweenExpr) {
+            if ($expr instanceof AndExpr) {
+                $this->processAndExpr($expr);
+            } elseif ($expr instanceof BetweenExpr) {
                 $this->processBetweenExpr($expr);
             } elseif ($expr instanceof PaginateExpr) {
                 $this->processPaginateExpr($expr);
@@ -112,7 +90,36 @@ class DoctrineOrmProcessor implements ProcessorInterface
      */
     protected function getParamKeyByExpr(ExprInterface $expr)
     {
-        return str_replace('.', '', $expr->getField()) . ucfirst($expr->getExpression()) . uniqid();
+        return str_replace('.', '', $expr->getField()) . ucfirst($expr->getExpression()) . md5(uniqid(rand(), true));
+    }
+
+    /**
+     * @param AndExpr $expr
+     */
+    protected function processAndExpr(AndExpr $expr)
+    {
+        $this->processingExprAndExprOr = true;
+
+        $queue = $expr->getQueue();
+
+        $where = [];
+
+        foreach ($queue as $expr) {
+            if ($expr instanceof OrExpr) {
+                $this->processOrExpr($expr);
+            } elseif ($expr instanceof BetweenExpr) {
+                $where[] = $this->processBetweenExpr($expr);
+            } elseif ($expr instanceof ExprInterface) {
+                $where[] = $this->processComparisonExpr($expr);
+            }
+        }
+
+        $this->queryBuilder->andWhere(call_user_func_array(
+            [$this->queryBuilder->expr(), 'andX'],
+            $where
+        ));
+
+        $this->processingExprAndExprOr = false;
     }
 
     /**
@@ -127,13 +134,15 @@ class DoctrineOrmProcessor implements ProcessorInterface
 
         $where = $this->queryBuilder->expr()->between($expr->getField(), ':' . $from, ':' . $to);
 
-        $whereOperationMode = $this->getWhereOperationMode();
-
-        $this->queryBuilder->{$whereOperationMode}($where);
-
         $this->queryBuilder->setParameter($from, $expr->getFrom());
 
         $this->queryBuilder->setParameter($to, $expr->getTo());
+
+        if ($this->isProcessingExprAndExprOr()) {
+            return $where;
+        }
+
+        $this->queryBuilder->andWhere($where);
     }
 
     /**
@@ -159,11 +168,28 @@ class DoctrineOrmProcessor implements ProcessorInterface
      */
     protected function processOrExpr(OrExpr $expr)
     {
-        $this->setWhereOperationMode(self::WHERE_OPERATION_MODE_OR);
+        $this->processingExprAndExprOr = true;
 
-        $this->process($expr->getQueue());
+        $queue = $expr->getQueue();
 
-        $this->setWhereOperationMode(self::WHERE_OPERATION_MODE_AND);
+        $where = [];
+
+        foreach ($queue as $expr) {
+            if ($expr instanceof AndExpr) {
+                $this->processAndExpr($expr);
+            } elseif ($expr instanceof BetweenExpr) {
+                $where[] = $this->processBetweenExpr($expr);
+            } elseif ($expr instanceof ExprInterface) {
+                $where[] = $this->processComparisonExpr($expr);
+            }
+        }
+
+        $this->queryBuilder->orWhere(call_user_func_array(
+            [$this->queryBuilder->expr(), 'orX'],
+            $where
+        ));
+
+        $this->processingExprAndExprOr = false;
     }
 
     /**
@@ -175,10 +201,12 @@ class DoctrineOrmProcessor implements ProcessorInterface
 
         $where = $this->queryBuilder->expr()->{$expr->getExpression()}($expr->getField(), ':' . $paramKey);
 
-        $whereOperationMode = $this->getWhereOperationMode();
-
-        $this->queryBuilder->{$whereOperationMode}($where);
-
         $this->queryBuilder->setParameter($paramKey, $expr->getValue());
+
+        if ($this->isProcessingExprAndExprOr()) {
+            return $where;
+        }
+
+        $this->queryBuilder->andWhere($where);
     }
 }

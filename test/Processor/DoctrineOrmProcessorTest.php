@@ -4,6 +4,7 @@ namespace Cekurte\Resource\Query\Language\Test\Processor;
 
 use Cekurte\Resource\Query\Language\ExprBuilder;
 use Cekurte\Resource\Query\Language\ExprQueue;
+use Cekurte\Resource\Query\Language\Expr\AndExpr;
 use Cekurte\Resource\Query\Language\Expr\BetweenExpr;
 use Cekurte\Resource\Query\Language\Expr\EqExpr;
 use Cekurte\Resource\Query\Language\Expr\OrExpr;
@@ -51,11 +52,6 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
 
         $processor = new DoctrineOrmProcessor($queryBuilder);
 
-        $this->assertEquals(
-            DoctrineOrmProcessor::WHERE_OPERATION_MODE_AND,
-            $processor->getWhereOperationMode()
-        );
-
         $this->assertInstanceOf(
             '\\Doctrine\\ORM\\QueryBuilder',
             $this->propertyGetValue($processor, 'queryBuilder')
@@ -64,36 +60,15 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
         $this->assertEquals(1, count($this->propertyGetValue($processor, 'queryBuilder')->getParameters()));
     }
 
-    public function testSetWhereOperationMode()
+    public function testIsProcessingExprAndExprOr()
     {
         $processor = $this->getProcessor();
 
-        $this->assertEquals(
-            DoctrineOrmProcessor::WHERE_OPERATION_MODE_AND,
-            $processor->getWhereOperationMode()
-        );
+        $this->assertFalse($this->invokeMethod($processor, 'isProcessingExprAndExprOr', []));
 
-        $this->invokeMethod($processor, 'setWhereOperationMode', [
-            DoctrineOrmProcessor::WHERE_OPERATION_MODE_OR
-        ]);
+        $this->propertySetValue($processor, 'processingExprAndExprOr', true);
 
-        $this->assertEquals(
-            DoctrineOrmProcessor::WHERE_OPERATION_MODE_OR,
-            $processor->getWhereOperationMode()
-        );
-    }
-
-    /**
-     * @expectedException \Cekurte\Resource\Query\Language\Exception\ProcessorException
-     * @expectedExceptionMessageRegExp /The where operation mode ".*?" is not allowed or not exists./
-     */
-    public function testSetWhereOperationModeProcessorException()
-    {
-        $processor = $this->getProcessor();
-
-        $this->invokeMethod($processor, 'setWhereOperationMode', [
-            'or'
-        ]);
+        $this->assertTrue($this->invokeMethod($processor, 'isProcessingExprAndExprOr', []));
     }
 
     public function testGetParamKeyByExpr()
@@ -104,7 +79,7 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
             new EqExpr('alias.field', 'value')
         ]);
 
-        $this->assertEquals('aliasfieldEq', substr($paramKey, 0, -13));
+        $this->assertEquals('aliasfieldEq', substr($paramKey, 0, -32));
     }
 
     public function testProcessBetweenExpr()
@@ -254,63 +229,36 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
         $this->invokeMethod($processor, 'processSortExpr', [$expressionInterface]);
     }
 
-    public function testProcessOrExpr()
-    {
-        $processor = $this
-            ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\Processor\\DoctrineOrmProcessor')
-            ->setConstructorArgs([$this->getDoctrineOrmQueryBuilder()])
-            ->setMethods(['setWhereOperationMode', 'process'])
-            ->getMock()
-        ;
-
-        $processor
-            ->expects($this->at(2))
-            ->method('setWhereOperationMode')
-            ->will($this->returnValue(null))
-        ;
-
-        $processor
-            ->expects($this->once())
-            ->method('process')
-            ->will($this->returnValue(null))
-        ;
-
-        $expressionInterface = $this
-            ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\Expr\\OrExpr')
-            ->disableOriginalConstructor()
-            ->setMethods(['getQueue'])
-            ->getMock()
-        ;
-
-        $expressionInterface
-            ->expects($this->once())
-            ->method('getQueue')
-            ->will($this->returnValue(new ExprQueue()))
-        ;
-
-        $this->invokeMethod($processor, 'processOrExpr', [$expressionInterface]);
-    }
-
     public function dataProviderProcessComparisonExpr()
     {
         return [
-            ['eq',      '\Cekurte\Resource\Query\Language\Expr\EqExpr'],
-            ['gte',     '\Cekurte\Resource\Query\Language\Expr\GteExpr'],
-            ['gt',      '\Cekurte\Resource\Query\Language\Expr\GtExpr'],
-            ['in',      '\Cekurte\Resource\Query\Language\Expr\InExpr'],
-            ['like',    '\Cekurte\Resource\Query\Language\Expr\LikeExpr'],
-            ['lte',     '\Cekurte\Resource\Query\Language\Expr\LteExpr'],
-            ['lt',      '\Cekurte\Resource\Query\Language\Expr\LtExpr'],
-            ['neq',     '\Cekurte\Resource\Query\Language\Expr\NeqExpr'],
-            ['notin',   '\Cekurte\Resource\Query\Language\Expr\NotInExpr'],
-            ['notlike', '\Cekurte\Resource\Query\Language\Expr\NotLikeExpr'],
+            ['eq',      '\Cekurte\Resource\Query\Language\Expr\EqExpr',      false],
+            ['gte',     '\Cekurte\Resource\Query\Language\Expr\GteExpr',     false],
+            ['gt',      '\Cekurte\Resource\Query\Language\Expr\GtExpr',      false],
+            ['in',      '\Cekurte\Resource\Query\Language\Expr\InExpr',      false],
+            ['like',    '\Cekurte\Resource\Query\Language\Expr\LikeExpr',    false],
+            ['lte',     '\Cekurte\Resource\Query\Language\Expr\LteExpr',     false],
+            ['lt',      '\Cekurte\Resource\Query\Language\Expr\LtExpr',      false],
+            ['neq',     '\Cekurte\Resource\Query\Language\Expr\NeqExpr',     false],
+            ['notin',   '\Cekurte\Resource\Query\Language\Expr\NotInExpr',   false],
+            ['notlike', '\Cekurte\Resource\Query\Language\Expr\NotLikeExpr', false],
+            ['eq',      '\Cekurte\Resource\Query\Language\Expr\EqExpr',      true],
+            ['gte',     '\Cekurte\Resource\Query\Language\Expr\GteExpr',     true],
+            ['gt',      '\Cekurte\Resource\Query\Language\Expr\GtExpr',      true],
+            ['in',      '\Cekurte\Resource\Query\Language\Expr\InExpr',      true],
+            ['like',    '\Cekurte\Resource\Query\Language\Expr\LikeExpr',    true],
+            ['lte',     '\Cekurte\Resource\Query\Language\Expr\LteExpr',     true],
+            ['lt',      '\Cekurte\Resource\Query\Language\Expr\LtExpr',      true],
+            ['neq',     '\Cekurte\Resource\Query\Language\Expr\NeqExpr',     true],
+            ['notin',   '\Cekurte\Resource\Query\Language\Expr\NotInExpr',   true],
+            ['notlike', '\Cekurte\Resource\Query\Language\Expr\NotLikeExpr', true],
         ];
     }
 
     /**
      * @dataProvider dataProviderProcessComparisonExpr
      */
-    public function testProcessComparisonExpr($expression, $class)
+    public function testProcessComparisonExpr($expression, $class, $isProcessing)
     {
         $doctrineQueryExpr = $this
             ->getMockBuilder('\\Doctrine\\ORM\\Query\\Expr')
@@ -321,7 +269,7 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
         $doctrineQueryExpr
             ->expects($this->once())
             ->method($expression)
-            ->will($this->returnValue(null))
+            ->will($this->returnValue($this->getMock('\\Doctrine\\Common\\Collections\\Expr\\Expression')))
         ;
 
         $queryBuilder = $this->getDoctrineOrmQueryBuilderAsMock()
@@ -335,11 +283,13 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
             ->will($this->returnValue($doctrineQueryExpr))
         ;
 
-        $queryBuilder
-            ->expects($this->once())
-            ->method('andWhere')
-            ->will($this->returnValue(null))
-        ;
+        if (!$isProcessing) {
+            $queryBuilder
+                ->expects($this->once())
+                ->method('andWhere')
+                ->will($this->returnValue(null))
+            ;
+        }
 
         $queryBuilder
             ->expects($this->once())
@@ -350,26 +300,16 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
         $processor = $this
             ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\Processor\\DoctrineOrmProcessor')
             ->setConstructorArgs([$queryBuilder])
-            ->setMethods(['getParamKeyByExpr', 'getWhereOperationMode', 'andWhere'])
+            ->setMethods(['getParamKeyByExpr', 'andWhere'])
             ->getMock()
         ;
+
+        $this->propertySetValue($processor, 'processingExprAndExprOr', $isProcessing);
 
         $processor
             ->expects($this->once())
             ->method('getParamKeyByExpr')
             ->will($this->returnValue('fakeParamKey'))
-        ;
-
-        $processor
-            ->expects($this->once())
-            ->method('getWhereOperationMode')
-            ->will($this->returnValue('andWhere'))
-        ;
-
-        $queryBuilder
-            ->expects($this->once())
-            ->method('andWhere')
-            ->will($this->returnValue(null))
         ;
 
         $expressionInterface = $this
@@ -397,7 +337,173 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
             ->will($this->returnValue('value'))
         ;
 
-        $this->invokeMethod($processor, 'processComparisonExpr', [$expressionInterface]);
+        $where = $this->invokeMethod($processor, 'processComparisonExpr', [$expressionInterface]);
+
+        if ($isProcessing) {
+            $this->assertTrue($where instanceof \Doctrine\Common\Collections\Expr\Expression);
+        }
+    }
+
+    public function testProcessOrExpr()
+    {
+        $doctrineQueryExpr = $this
+            ->getMockBuilder('\\Doctrine\\ORM\\Query\\Expr')
+            ->setMethods(['orX'])
+            ->getMock()
+        ;
+
+        $doctrineQueryExpr
+            ->expects($this->once())
+            ->method('orX')
+            ->will($this->returnValue($this->getMock('\\Doctrine\\Common\\Collections\\Expr\\Expression')))
+        ;
+
+        $queryBuilder = $this->getDoctrineOrmQueryBuilderAsMock()
+            ->setMethods(['expr', 'orWhere'])
+            ->getMock()
+        ;
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('expr')
+            ->will($this->returnValue($doctrineQueryExpr))
+        ;
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('orWhere')
+            ->will($this->returnValue(null))
+        ;
+
+        $processor = $this
+            ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\Processor\\DoctrineOrmProcessor')
+            ->setConstructorArgs([$queryBuilder])
+            ->setMethods(['processComparisonExpr', 'processBetweenExpr', 'processAndExpr'])
+            ->getMock()
+        ;
+
+        $processor
+            ->expects($this->at(2))
+            ->method('processComparisonExpr')
+            ->will($this->returnValue(null))
+        ;
+
+        $processor
+            ->expects($this->once())
+            ->method('processBetweenExpr')
+            ->will($this->returnValue(null))
+        ;
+
+        $processor
+            ->expects($this->once())
+            ->method('processAndExpr')
+            ->will($this->returnValue(null))
+        ;
+
+        $andExpr = new OrExpr('field:eq:1|field:eq:2|field:between:1-2|:and:field:eq:1&field:eq:2');
+
+        $this->invokeMethod($processor, 'processOrExpr', [$andExpr]);
+    }
+
+    public function testProcessAndExpr()
+    {
+        $doctrineQueryExpr = $this
+            ->getMockBuilder('\\Doctrine\\ORM\\Query\\Expr')
+            ->setMethods(['andX'])
+            ->getMock()
+        ;
+
+        $doctrineQueryExpr
+            ->expects($this->once())
+            ->method('andX')
+            ->will($this->returnValue($this->getMock('\\Doctrine\\Common\\Collections\\Expr\\Expression')))
+        ;
+
+        $queryBuilder = $this->getDoctrineOrmQueryBuilderAsMock()
+            ->setMethods(['expr', 'andWhere'])
+            ->getMock()
+        ;
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('expr')
+            ->will($this->returnValue($doctrineQueryExpr))
+        ;
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('andWhere')
+            ->will($this->returnValue(null))
+        ;
+
+        $processor = $this
+            ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\Processor\\DoctrineOrmProcessor')
+            ->setConstructorArgs([$queryBuilder])
+            ->setMethods(['processComparisonExpr', 'processBetweenExpr', 'processOrExpr'])
+            ->getMock()
+        ;
+
+        $processor
+            ->expects($this->at(2))
+            ->method('processComparisonExpr')
+            ->will($this->returnValue(null))
+        ;
+
+        $processor
+            ->expects($this->once())
+            ->method('processBetweenExpr')
+            ->will($this->returnValue(null))
+        ;
+
+        $processor
+            ->expects($this->once())
+            ->method('processOrExpr')
+            ->will($this->returnValue(null))
+        ;
+
+        $andExpr = new AndExpr('field:eq:1&field:eq:2&field:between:1-2&:or:field:eq:1|field:eq:2');
+
+        $this->invokeMethod($processor, 'processAndExpr', [$andExpr]);
+    }
+
+    public function testProcessWithOrExpression()
+    {
+        $processor = $this
+            ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\Processor\\DoctrineOrmProcessor')
+            ->setConstructorArgs([$this->getDoctrineOrmQueryBuilder()])
+            ->setMethods(['processOrExpr'])
+            ->getMock()
+        ;
+
+        $processor
+            ->expects($this->once())
+            ->method('processOrExpr')
+            ->will($this->returnValue(null))
+        ;
+
+        $builder = new ExprBuilder();
+
+        $processor->process($builder->orx('field:eq:1|field:eq:2'));
+    }
+
+    public function testProcessWithAndExpression()
+    {
+        $processor = $this
+            ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\Processor\\DoctrineOrmProcessor')
+            ->setConstructorArgs([$this->getDoctrineOrmQueryBuilder()])
+            ->setMethods(['processAndExpr'])
+            ->getMock()
+        ;
+
+        $processor
+            ->expects($this->once())
+            ->method('processAndExpr')
+            ->will($this->returnValue(null))
+        ;
+
+        $builder = new ExprBuilder();
+
+        $processor->process($builder->andx('field:eq:1&field:eq:2'));
     }
 
     public function testProcessWithBetweenExpression()
@@ -418,6 +524,50 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
         $builder = new ExprBuilder();
 
         $processor->process($builder->between('field', 1, 10));
+    }
+
+    public function testProcessWithBetweenExpressionReturningTheWhereExpression()
+    {
+        $doctrineQueryExpr = $this
+            ->getMockBuilder('\\Doctrine\\ORM\\Query\\Expr')
+            ->setMethods(['between'])
+            ->getMock()
+        ;
+
+        $doctrineQueryExpr
+            ->expects($this->once())
+            ->method('between')
+            ->will($this->returnValue($this->getMock('\\Doctrine\\Common\\Collections\\Expr\\Expression')))
+        ;
+
+        $queryBuilder = $this->getDoctrineOrmQueryBuilderAsMock()
+            ->setMethods(['expr', 'setParameter'])
+            ->getMock()
+        ;
+
+        $queryBuilder
+            ->expects($this->once())
+            ->method('expr')
+            ->will($this->returnValue($doctrineQueryExpr))
+        ;
+
+        $queryBuilder
+            ->expects($this->at(2))
+            ->method('setParameter')
+            ->will($this->returnValue(null))
+        ;
+
+        $processor = $this
+            ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\Processor\\DoctrineOrmProcessor')
+            ->setConstructorArgs([$queryBuilder])
+            ->getMock()
+        ;
+
+        $this->propertySetValue($processor, 'processingExprAndExprOr', true);
+
+        $where = $this->invokeMethod($processor, 'processBetweenExpr', [new BetweenExpr('field', 1, 10)]);
+
+        $this->assertTrue($where instanceof \Doctrine\Common\Collections\Expr\Expression);
     }
 
     public function testProcessWithPaginateExpression()
@@ -458,26 +608,6 @@ class DoctrineOrmProcessorTest extends ReflectionTestCase
         $builder = new ExprBuilder();
 
         $processor->process($builder->sort('field', 'asc'));
-    }
-
-    public function testProcessWithOrExpression()
-    {
-        $processor = $this
-            ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\Processor\\DoctrineOrmProcessor')
-            ->setConstructorArgs([$this->getDoctrineOrmQueryBuilder()])
-            ->setMethods(['processOrExpr'])
-            ->getMock()
-        ;
-
-        $processor
-            ->expects($this->once())
-            ->method('processOrExpr')
-            ->will($this->returnValue(null))
-        ;
-
-        $builder = new ExprBuilder();
-
-        $processor->process($builder->orx('field:eq:1|field:eq:2'));
     }
 
     public function testProcessWithEqExpression()
