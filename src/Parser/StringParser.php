@@ -36,7 +36,7 @@ class StringParser extends AbstractParser implements ParserInterface
     {
         $this->data = $data;
 
-        $this->setSeparator('&');
+        $this->setSeparator(';');
     }
 
     /**
@@ -82,8 +82,8 @@ class StringParser extends AbstractParser implements ParserInterface
 
             list($field, $expression, $value) = explode(':', $item);
 
-            if ($expression === 'or') {
-                $value = $this->getValueToOrExpression($item);
+            if ($expression === 'and' || $expression === 'or') {
+                $value = $this->getValueOfComplexExpression($expression, $item);
             }
 
             $this->process($builder, $field, $expression, $value);

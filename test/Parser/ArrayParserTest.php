@@ -69,7 +69,7 @@ class ArrayParserTest extends ReflectionTestCase
         ];
 
         $methods = [
-            'getValueToOrExpression',
+            'getValueOfComplexExpression',
             'process',
         ];
 
@@ -77,7 +77,7 @@ class ArrayParserTest extends ReflectionTestCase
 
         $mock
             ->expects($this->once())
-            ->method('getValueToOrExpression')
+            ->method('getValueOfComplexExpression')
             ->will($this->returnValue(null))
         ;
 

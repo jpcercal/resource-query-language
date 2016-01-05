@@ -86,6 +86,8 @@ abstract class AbstractParser implements ParserInterface
                 restore_error_handler();
 
                 return $builder->paginate($currentPageNumber, $maxResultsPerPage);
+            case 'and':
+                return $builder->andx($value);
             case 'or':
                 return $builder->orx($value);
             default:
@@ -93,8 +95,16 @@ abstract class AbstractParser implements ParserInterface
         }
     }
 
-    protected function getValueToOrExpression($item)
+    /**
+     * Get value of complex expression such as "and" and "or".
+     *
+     * @param  string $expression
+     * @param  string $item
+     *
+     * @return string
+     */
+    protected function getValueOfComplexExpression($expression, $item)
     {
-        return substr($item, strpos(sprintf(':%s:', 'or'), $item) + 4);
+        return substr($item, strpos(sprintf(':%s:', $expression), $item) + strlen($expression) + 2);
     }
 }

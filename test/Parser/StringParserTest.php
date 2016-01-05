@@ -20,7 +20,7 @@ class StringParserTest extends ReflectionTestCase
         $mock
             ->expects($this->once())
             ->method('getSeparator')
-            ->will($this->returnValue('&'))
+            ->will($this->returnValue(';'))
         ;
 
         $mock
@@ -51,7 +51,7 @@ class StringParserTest extends ReflectionTestCase
     {
         $parser = new StringParser('field:eq:value');
 
-        $this->assertEquals('&', $parser->getSeparator());
+        $this->assertEquals(';', $parser->getSeparator());
 
         $parser->setSeparator('@');
 
@@ -66,13 +66,13 @@ class StringParserTest extends ReflectionTestCase
     public function testParseToOrExpression()
     {
         $mock = $this->getParserMock(':or:field:eq:1|field:eq:2', [
-            'getValueToOrExpression',
+            'getValueOfComplexExpression',
             'process',
         ]);
 
         $mock
             ->expects($this->once())
-            ->method('getValueToOrExpression')
+            ->method('getValueOfComplexExpression')
             ->will($this->returnValue(null))
         ;
 

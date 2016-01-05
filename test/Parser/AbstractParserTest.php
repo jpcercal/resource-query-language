@@ -42,7 +42,7 @@ class AbstractParserTest extends ReflectionTestCase
         );
     }
 
-    public function testGetValueToOrExpression()
+    public function testGetValueOfComplexExpression()
     {
         $mock = $this->getParserMock();
 
@@ -50,7 +50,7 @@ class AbstractParserTest extends ReflectionTestCase
 
         $this->assertEquals(
             $value,
-            $this->invokeMethod($mock, 'getValueToOrExpression', [':or:' . $value])
+            $this->invokeMethod($mock, 'getValueOfComplexExpression', ['or', ':or:' . $value])
         );
     }
 
@@ -157,6 +157,26 @@ class AbstractParserTest extends ReflectionTestCase
         $mock = $this->getParserMock();
 
         $this->invokeMethod($mock, 'process', [$mockExprBuilder, null, 'or', 'field:eq:1|field:eq:2']);
+    }
+
+    public function testProcessValueOfAndExpression()
+    {
+        $mockExprBuilder = $this
+            ->getMockBuilder('\\Cekurte\\Resource\\Query\\Language\\ExprBuilder')
+            ->disableOriginalConstructor()
+            ->setMethods(['andx'])
+            ->getMock()
+        ;
+
+        $mockExprBuilder
+            ->expects($this->once())
+            ->method('andx')
+            ->will($this->returnValue(null))
+        ;
+
+        $mock = $this->getParserMock();
+
+        $this->invokeMethod($mock, 'process', [$mockExprBuilder, null, 'and', 'field:eq:1&field:eq:2']);
     }
 
     public function dataProviderProcessExpression()

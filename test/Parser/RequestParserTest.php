@@ -43,13 +43,13 @@ class RequestParserTest extends ReflectionTestCase
     public function testParseToOrExpression()
     {
         $mock = $this->getParserMock('?q[]=:or:field:eq:1|field:eq:2', [
-            'getValueToOrExpression',
+            'getValueOfComplexExpression',
             'process',
         ]);
 
         $mock
             ->expects($this->once())
-            ->method('getValueToOrExpression')
+            ->method('getValueOfComplexExpression')
             ->will($this->returnValue(null))
         ;
 
