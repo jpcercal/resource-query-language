@@ -30,6 +30,7 @@ final class Expr
     public static function getExpressions()
     {
         return [
+            'and'      => '\Cekurte\Resource\Query\Language\Expr\AndExpr',
             'between'  => '\Cekurte\Resource\Query\Language\Expr\BetweenExpr',
             'eq'       => '\Cekurte\Resource\Query\Language\Expr\EqExpr',
             'gte'      => '\Cekurte\Resource\Query\Language\Expr\GteExpr',
