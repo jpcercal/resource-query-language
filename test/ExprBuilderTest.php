@@ -35,6 +35,14 @@ class ExprBuilderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testAndx()
+    {
+        $this->assertInstanceOf(
+            '\\Cekurte\\Resource\\Query\\Language\\ExprBuilder',
+            $this->getExprBuilderMock()->andx('field:eq:1&field:eq:2')
+        );
+    }
+
     public function testBetween()
     {
         $this->assertInstanceOf(
