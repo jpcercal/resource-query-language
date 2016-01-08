@@ -71,11 +71,15 @@ class InExpr extends AbstractExpr implements ExprInterface
             $validate($rawValue);
         }
 
+        $input = is_array($rawValue) ? $rawValue : explode('+', $rawValue);
+
         $this->expression = 'in';
         $this->operator   = 'in';
 
         $this->field = $field;
-        $this->value = is_array($rawValue) ? implode('+', $rawValue) : $rawValue;
+        $this->value = array_filter($input, function ($value) {
+            return $value !== '';
+        });
 
         $this->rawValue = $rawValue;
     }
