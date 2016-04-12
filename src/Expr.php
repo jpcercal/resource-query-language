@@ -11,8 +11,6 @@
 
 namespace Cekurte\Resource\Query\Language;
 
-use Cekurte\Resource\Query\Language\Contract\ExprInterface;
-
 /**
  * Expr
  *
