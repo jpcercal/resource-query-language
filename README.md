@@ -5,6 +5,7 @@
 [![Test Coverage](https://codeclimate.com/github/cekurte/resource-query-language/badges/coverage.svg)](https://codeclimate.com/github/cekurte/resource-query-language/coverage)
 [![Latest Stable Version](https://img.shields.io/packagist/v/cekurte/rql.svg?style=square)](https://packagist.org/packages/cekurte/rql)
 [![License](https://img.shields.io/packagist/l/cekurte/rql.svg?style=square)](https://packagist.org/packages/cekurte/rql)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/d4950c4f-bfc3-4782-8a19-38a0176b5b0d/mini.png)](https://insight.sensiolabs.com/projects/d4950c4f-bfc3-4782-8a19-38a0176b5b0d)
 
 - A Resource Query Language to PHP (with all methods covered by php unit tests), with this library you can perform queries using a unique input interface that will be converted and processed using the ProcessorInterface **contribute with this project**!
 

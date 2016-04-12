@@ -14,7 +14,6 @@ namespace Cekurte\Resource\Query\Language;
 use Cekurte\Resource\Query\Language\Contract\ExprInterface;
 use Cekurte\Resource\Query\Language\Contract\QueueInterface;
 use Cekurte\Resource\Query\Language\Exception\QueueException;
-use Cekurte\Resource\Query\Language\Expr\OrExpr;
 
 /**
  * ExprQueue
