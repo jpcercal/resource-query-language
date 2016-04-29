@@ -2,7 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/cekurte/resource-query-language/master.svg?style=square)](http://travis-ci.org/cekurte/resource-query-language)
 [![Code Climate](https://codeclimate.com/github/cekurte/resource-query-language/badges/gpa.svg)](https://codeclimate.com/github/cekurte/resource-query-language)
-[![Test Coverage](https://codeclimate.com/github/cekurte/resource-query-language/badges/coverage.svg)](https://codeclimate.com/github/cekurte/resource-query-language/coverage)
+[![Coverage Status](https://coveralls.io/repos/github/cekurte/resource-query-language/badge.svg?branch=master)](https://coveralls.io/github/cekurte/resource-query-language?branch=master)
 [![Latest Stable Version](https://img.shields.io/packagist/v/cekurte/rql.svg?style=square)](https://packagist.org/packages/cekurte/rql)
 [![License](https://img.shields.io/packagist/l/cekurte/rql.svg?style=square)](https://packagist.org/packages/cekurte/rql)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d4950c4f-bfc3-4782-8a19-38a0176b5b0d/mini.png)](https://insight.sensiolabs.com/projects/d4950c4f-bfc3-4782-8a19-38a0176b5b0d)
