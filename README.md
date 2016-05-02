@@ -1,8 +1,8 @@
 # RQL (Resource Query Language)
 
-[![Build Status](https://img.shields.io/travis/cekurte/resource-query-language/master.svg?style=square)](http://travis-ci.org/cekurte/resource-query-language)
-[![Code Climate](https://codeclimate.com/github/cekurte/resource-query-language/badges/gpa.svg)](https://codeclimate.com/github/cekurte/resource-query-language)
-[![Coverage Status](https://coveralls.io/repos/github/cekurte/resource-query-language/badge.svg?branch=master)](https://coveralls.io/github/cekurte/resource-query-language?branch=master)
+[![Build Status](https://img.shields.io/travis/jpcercal/resource-query-language/master.svg?style=square)](http://travis-ci.org/jpcercal/resource-query-language)
+[![Code Climate](https://codeclimate.com/github/jpcercal/resource-query-language/badges/gpa.svg)](https://codeclimate.com/github/jpcercal/resource-query-language)
+[![Coverage Status](https://coveralls.io/repos/github/jpcercal/resource-query-language/badge.svg?branch=master)](https://coveralls.io/github/jpcercal/resource-query-language?branch=master)
 [![Latest Stable Version](https://img.shields.io/packagist/v/cekurte/rql.svg?style=square)](https://packagist.org/packages/cekurte/rql)
 [![License](https://img.shields.io/packagist/l/cekurte/rql.svg?style=square)](https://packagist.org/packages/cekurte/rql)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d4950c4f-bfc3-4782-8a19-38a0176b5b0d/mini.png)](https://insight.sensiolabs.com/projects/d4950c4f-bfc3-4782-8a19-38a0176b5b0d)
@@ -60,7 +60,7 @@ Ok, but why do not use the Doctrine QueryBuilder to build the queries and perfor
 
 Woow, you can see this scenario with various possibilities like me? Then, this library is for you guy. You share your aim with me and contribute with this project.
 
-But, if i want build a collection of expression, i need to put the expressions using the queue? Yes, it is an valid answer for this question, but you can use the [ExprBuilder](https://github.com/cekurte/resource-query-language/blob/master/src/ExprBuilder.php) to perform it too. Like the following example:
+But, if i want build a collection of expression, i need to put the expressions using the queue? Yes, it is an valid answer for this question, but you can use the [ExprBuilder](https://github.com/jpcercal/resource-query-language/blob/master/src/ExprBuilder.php) to perform it too. Like the following example:
 
 ```php
 <?php
@@ -82,7 +82,7 @@ $results = $qb->getQuery()->getResult();
 // ...
 ```
 
-Note that the [ExprBuilder](https://github.com/cekurte/resource-query-language/blob/master/src/ExprBuilder.php) class implements a shortcut to all available expressions.
+Note that the [ExprBuilder](https://github.com/jpcercal/resource-query-language/blob/master/src/ExprBuilder.php) class implements a shortcut to all available expressions.
 
 Currently are available the following expressions:
 
@@ -101,11 +101,11 @@ Currently are available the following expressions:
 - [PaginateExpr](#paginateexpr)
 - [SortExpr](#sortexpr)
 
-Above was listed the available query expressions, next you can see the use of expressions using the [ExprBuilder](https://github.com/cekurte/resource-query-language/blob/master/src/ExprBuilder.php) and the [ExprQueue](https://github.com/cekurte/resource-query-language/blob/master/src/ExprQueue.php).
+Above was listed the available query expressions, next you can see the use of expressions using the [ExprBuilder](https://github.com/jpcercal/resource-query-language/blob/master/src/ExprBuilder.php) and the [ExprQueue](https://github.com/jpcercal/resource-query-language/blob/master/src/ExprQueue.php).
 
 #### BetweenExpr
 
-The [BetweenExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/BetweenExpr.php) can be used to query a value that is in an interval of values.
+The [BetweenExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/BetweenExpr.php) can be used to query a value that is in an interval of values.
 
 ```php
 <?php
@@ -125,7 +125,7 @@ $expr->enqueue(new BetweenExpr('field', 1, 10));
 
 #### EqExpr
 
-The [EqExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/EqExpr.php) can be used to query a value using the equality operator.
+The [EqExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/EqExpr.php) can be used to query a value using the equality operator.
 
 ```php
 <?php
@@ -145,7 +145,7 @@ $expr->enqueue(new EqExpr('field', 'value'));
 
 #### GteExpr
 
-The [GteExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/GteExpr.php) can be used to query a value using that must be greater than or equal to one.
+The [GteExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/GteExpr.php) can be used to query a value using that must be greater than or equal to one.
 
 ```php
 <?php
@@ -165,7 +165,7 @@ $expr->enqueue(new GteExpr('field', 1));
 
 #### GtExpr
 
-The [GtExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/GtExpr.php) can be used to query a value using that must be greater than one.
+The [GtExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/GtExpr.php) can be used to query a value using that must be greater than one.
 
 ```php
 <?php
@@ -185,7 +185,7 @@ $expr->enqueue(new GtExpr('field', 1));
 
 #### InExpr
 
-The [InExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/InExpr.php) can be used to query a value that can be equal to one, two or three.
+The [InExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/InExpr.php) can be used to query a value that can be equal to one, two or three.
 
 ```php
 <?php
@@ -205,7 +205,7 @@ $expr->enqueue(new InExpr('field', [1, 2, 3]));
 
 #### LikeExpr
 
-The [LikeExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/LikeExpr.php) can be used to query a value that must be equal (in the end only) "%value" where the % operator is a joker like the SQL commands.
+The [LikeExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/LikeExpr.php) can be used to query a value that must be equal (in the end only) "%value" where the % operator is a joker like the SQL commands.
 
 ```php
 <?php
@@ -225,7 +225,7 @@ $expr->enqueue(new LikeExpr('field', '%value'));
 
 #### LteExpr
 
-The [LteExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/LteExpr.php) can be used to query a value using that must be less than or equal to one.
+The [LteExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/LteExpr.php) can be used to query a value using that must be less than or equal to one.
 
 ```php
 <?php
@@ -245,7 +245,7 @@ $expr->enqueue(new LteExpr('field', 1));
 
 #### LtExpr
 
-The [LtExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/LtExpr.php) can be used to query a value using that must be less than one.
+The [LtExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/LtExpr.php) can be used to query a value using that must be less than one.
 
 ```php
 <?php
@@ -265,7 +265,7 @@ $expr->enqueue(new LtExpr('field', 1));
 
 #### NeqExpr
 
-The [NeqExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/NeqExpr.php) can be used to query a value using the not equal operator.
+The [NeqExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/NeqExpr.php) can be used to query a value using the not equal operator.
 
 ```php
 <?php
@@ -285,7 +285,7 @@ $expr->enqueue(new NeqExpr('field', 'value'));
 
 #### NotInExpr
 
-The [NotInExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/NotInExpr.php) can be used to query a value that must be different of one, two or three.
+The [NotInExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/NotInExpr.php) can be used to query a value that must be different of one, two or three.
 
 ```php
 <?php
@@ -305,7 +305,7 @@ $expr->enqueue(new NotInExpr('field', [1, 2, 3]));
 
 #### NotLikeExpr
 
-The [NotLikeExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/NotLikeExpr.php) can be used to query a value that must be different (in the end only) "%value" where the % operator is a joker like the SQL commands.
+The [NotLikeExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/NotLikeExpr.php) can be used to query a value that must be different (in the end only) "%value" where the % operator is a joker like the SQL commands.
 
 ```php
 <?php
@@ -325,7 +325,7 @@ $expr->enqueue(new NotLikeExpr('field', '%value'));
 
 #### OrExpr
 
-The [OrExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/OrExpr.php) can be used to query a value joining the above comparison expressions to perform the query. In the following example all fields that are filled with the value one or two will be returned.
+The [OrExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/OrExpr.php) can be used to query a value joining the above comparison expressions to perform the query. In the following example all fields that are filled with the value one or two will be returned.
 
 ```php
 <?php
@@ -345,7 +345,7 @@ $expr->enqueue(new OrExpr(['field:eq:1', 'field:eq:2']));
 
 #### PaginateExpr
 
-The [PaginateExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/PaginateExpr.php) can be used to paginate the results, the first parameter is the current page number and the second parameter is the limit of results per page.
+The [PaginateExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/PaginateExpr.php) can be used to paginate the results, the first parameter is the current page number and the second parameter is the limit of results per page.
 
 ```php
 <?php
@@ -365,7 +365,7 @@ $expr->enqueue(new PaginateExpr(1, 10));
 
 #### SortExpr
 
-The [SortExpr](https://github.com/cekurte/resource-query-language/blob/master/src/Expr/SortExpr.php) can be used to sort the results, the first parameter is the field that will be sorted and the second parameter is the direction (can be used the asc and desc like in the SQL commands).
+The [SortExpr](https://github.com/jpcercal/resource-query-language/blob/master/src/Expr/SortExpr.php) can be used to sort the results, the first parameter is the field that will be sorted and the second parameter is the direction (can be used the asc and desc like in the SQL commands).
 
 ```php
 <?php
@@ -385,7 +385,7 @@ $expr->enqueue(new SortExpr('field', 'asc'));
 
 ### Parser
 
-The parser can be used to parse an input data in different formats to the [ExprBuilder](https://github.com/cekurte/resource-query-language/blob/master/src/ExprBuilder.php). Currently are available three parser classes that implements the [ParserInterface](https://github.com/cekurte/resource-query-language/blob/master/src/Contracts/ParserInterface.php).
+The parser can be used to parse an input data in different formats to the [ExprBuilder](https://github.com/jpcercal/resource-query-language/blob/master/src/ExprBuilder.php). Currently are available three parser classes that implements the [ParserInterface](https://github.com/jpcercal/resource-query-language/blob/master/src/Contracts/ParserInterface.php).
 
 - [ArrayParser](#arrayparser)
 - [RequestParser](#requestparser)
@@ -393,7 +393,7 @@ The parser can be used to parse an input data in different formats to the [ExprB
 
 #### ArrayParser
 
-The [ArrayParser](https://github.com/cekurte/resource-query-language/blob/master/src/Parser/ArrayParser.php) can be used to parse the array data to [ExprBuilder](https://github.com/cekurte/resource-query-language/blob/master/src/ExprBuilder.php), see the example in the below:
+The [ArrayParser](https://github.com/jpcercal/resource-query-language/blob/master/src/Parser/ArrayParser.php) can be used to parse the array data to [ExprBuilder](https://github.com/jpcercal/resource-query-language/blob/master/src/ExprBuilder.php), see the example in the below:
 
 ```php
 <?php
@@ -483,7 +483,7 @@ $exprBuilder = $parser->parse();
 
 #### RequestParser
 
-The [RequestParser](https://github.com/cekurte/resource-query-language/blob/master/src/Parser/RequestParser.php) can be used to parse an input data that is an instance of [RequestInterface](https://github.com/php-fig/http-message/blob/master/src/RequestInterface.php) (compatible with [PSR-7](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-7-http-message.md)), see the example in the below:
+The [RequestParser](https://github.com/jpcercal/resource-query-language/blob/master/src/Parser/RequestParser.php) can be used to parse an input data that is an instance of [RequestInterface](https://github.com/php-fig/http-message/blob/master/src/RequestInterface.php) (compatible with [PSR-7](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-7-http-message.md)), see the example in the below:
 
 ```php
 <?php
@@ -510,7 +510,7 @@ $exprBuilder = $parser->parse();
 
 #### StringParser
 
-The [StringParser](https://github.com/cekurte/resource-query-language/blob/master/src/Parser/StringParser.php) can be used to parse an input data that is a string, see the example in the below:
+The [StringParser](https://github.com/jpcercal/resource-query-language/blob/master/src/Parser/StringParser.php) can be used to parse an input data that is a string, see the example in the below:
 
 ```php
 <?php
