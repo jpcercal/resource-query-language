@@ -19,8 +19,10 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.5",
-        "psr/http-message": "^1.0",
-        "doctrine/orm": "^2.5"
+        "psr/http-message": "^1.0"
+    },
+    "suggest": {
+        "doctrine/orm": "Allow `DoctrineOrmProcessor` to be used"
     },
     "require-dev": {
         "zendframework/zend-diactoros": "^1.3",
