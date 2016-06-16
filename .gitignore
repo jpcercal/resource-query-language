@@ -1,5 +1,5 @@
 composer.phar
 *.lock
-!composer.lock
+composer.lock
 /vendor
 /build
